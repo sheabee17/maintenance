@@ -50,6 +50,7 @@ const database_commands = {
             }
         );
     },
+
     
 
     // Retrieve User by Email (Login)
@@ -66,7 +67,7 @@ const database_commands = {
     // Retrieve User by ID (Profile)
     getUserByID: (id, callback) => {
         checkDB();
-        con.query("SELECT id, first_name, last_name, username, email, user_role FROM user WHERE id = ?", [id], (err, results) => {
+        con.query("SELECT id, first_name, last_name, username, email, best_score, user_role FROM user WHERE id = ?", [id], (err, results) => {
             if (err) {
                 console.error(err);
                 return callback(err, null);
@@ -77,7 +78,6 @@ const database_commands = {
             callback(null, results[0]);
         });
     },
-    
 
     // Delete User Account
     deleteUser: (id, callback) => {
@@ -126,13 +126,13 @@ const database_commands = {
     getAllCharacters: (callback) => {
         checkDB();
         con.query("SELECT * FROM characters", (err, results) => {
-          if (err) {
-            console.error(err);
-            return callback(err, null);
-          }
-          callback(null, results);
+            if (err) {
+                console.error(err);
+                return callback(err, null);
+            }
+            callback(null, results);
         });
-      },
+    },
     // Retrieve Game History for a User
     getGameHistory: (user_id, callback) => {
         checkDB();
@@ -144,35 +144,49 @@ const database_commands = {
             callback(null, results);
         });
     },
-// Fetch leaderboard data
-getLeaderboard: (query, callback) => {
-    checkDB();
-    con.query(query, (err, results) => {
-        if (err) {
-            console.error("Error fetching leaderboard:", err);
-            return callback(err, null);
-        }
-        callback(null, results);
-    });
-},
+    // Fetch leaderboard data
+    getLeaderboard: (query, callback) => {
+        checkDB();
+        con.query(query, (err, results) => {
+            if (err) {
+                console.error("Error fetching leaderboard:", err);
+                return callback(err, null);
+            }
+            callback(null, results);
+        });
+    },
 
-// Insert a Score (Game Round)
-insertScore: (scoreData, callback) => {
-    checkDB();
-    const query = "INSERT INTO game_round (user_id, round_number, action, circle_selected, happiness_score) VALUES (?, ?, ?, ?, ?)";
-    
-    console.log("Executing query with values:", scoreData);  // Log the values
+    // Insert a Score (Game Round) and update user's highscore if necessary
+    insertScore: (scoreData, callback) => {
+        checkDB();
+        con.query(
+            "UPDATE user SET best_score = ? WHERE id=? AND best_score < ?",
+            [scoreData.happiness_score, scoreData.user_id, scoreData.happiness_score],
+            (err, res) => {
+                if (err) {
+                    console.error("Error saving highscore:", err);
+                    return callback(err, null);
+                }
+                else {
+                    console.log("Updated high score:", res);
+                    const query = "INSERT INTO game_round (user_id, round_number, action, circle_selected, happiness_score) VALUES (?, ?, ?, ?, ?)";
 
-    con.query(query, [scoreData.user_id, scoreData.round_number, scoreData.action, scoreData.circle_selected, scoreData.happiness_score], 
-    (err, results) => {
-        if (err) {
-            console.error("Error saving score:", err);  // Log any error
-            return callback(err, null);
-        }
-        console.log("Insert result:", results);  // Log the results from the database
-        callback(null, results);
-    });
-},
+                    console.log("Executing query with values:", scoreData);  // Log the values
+
+                    con.query(query, [scoreData.user_id, scoreData.round_number, scoreData.action, scoreData.circle_selected, scoreData.happiness_score],
+                        (err, results) => {
+                            if (err) {
+                                console.error("Error saving score:", err);  // Log any error
+                                return callback(err, null);
+                            }
+                            console.log("Insert result:", results);  // Log the results from the database
+                            callback(null, results);
+                        }
+                    );
+                }
+            }
+        );
+    },
 
 
     /**
@@ -194,7 +208,7 @@ insertScore: (scoreData, callback) => {
             }
         );
     },
-    
+
 
     // Retrieve All Reviews
     getAllReviews: (callback) => {
@@ -207,7 +221,7 @@ insertScore: (scoreData, callback) => {
             callback(null, results);
         });
     }
-    
+
 };
 
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./GamePage.css"; 
+import "./css/GamePage.css"; 
 
 // 1. Define the initial state object
 const initialGameState = {

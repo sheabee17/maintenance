@@ -475,14 +475,20 @@ app.get('/profile/me', authenticateToken, (req, res) => {
             console.error('Error fetching user profile:', err);
             return res.status(500).send('Error fetching user profile');
         }
-        res.json({
-            id: user.id,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            username: user.username,
-            email: user.email,
-            user_role: user.user_role 
+        db.database_commands.getGameHistory(user.id, (err, history) => {
+            if (err) return res.status(500).send('Error fetching game history');
+            res.json({
+                id: user.id,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                username: user.username,
+                email: user.email,
+                user_role: user.user_role,
+                best_score: user.best_score,
+                history:history
+            });
         });
+        
     });
 });
 
@@ -575,11 +581,17 @@ app.get('/characters', (req, res) => {
  */
 // Get leaderboard (Top players by score)
 app.get('/leaderboard', (req, res) => {
+    // const query = `
+    //   SELECT user.username, user.id, MAX(game_round.happiness_score) AS score
+    //   FROM user
+    //   JOIN game_round ON game_round.user_id = user.id
+    //   GROUP BY user.id
+    //   ORDER BY score DESC
+    //   LIMIT 10;
+    // `;
     const query = `
-      SELECT user.username, user.id, SUM(game_round.happiness_score) AS score
+      SELECT user.username, user.id, user.best_score AS score
       FROM user
-      JOIN game_round ON game_round.user_id = user.id
-      GROUP BY user.id
       ORDER BY score DESC
       LIMIT 10;
     `;

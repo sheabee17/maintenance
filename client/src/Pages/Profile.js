@@ -48,11 +48,13 @@ const Profile = () => {
   
 
   if (!user) return <div>Loading...</div>;
+
   //main html code
   return (
     <div className="profile">
       <h1>{user.username}'s Profile</h1>
       <p>Email: {user.email}</p>
+      <p>Best Score: {user.best_score}</p>
 
       {/* Navigation Links */}
       <nav>
@@ -61,19 +63,21 @@ const Profile = () => {
         <Link to="/">Home</Link>
       </nav>
       <button onClick={handleMakeInactive}>Make Inactive</button>
-     {/* <h3>Game History</h3>
+      
+      {/*shows list of user's game history*/}
+     <h3>Game History</h3> 
       <ul>
-        {user.gameHistory && user.gameHistory.length > 0 ? (
-          user.gameHistory.map((game, index) => (
+        {user.history && user.history.length > 0 ? (
+          user.history.map((game, index) => (
             <li key={index}>
-              Game {game.id}: {game.score} points {" "}
+              Game {game.id}: {game.happiness_score} points {" "}
               <Link to={`/game/${game.id}`}>View Game</Link>
             </li>
           ))
         ) : (
           <p>No past games found.</p>
         )}
-      </ul> */}
+      </ul>
     </div>
   );
 };

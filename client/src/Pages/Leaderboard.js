@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "./Leaderboard.css";
+import "./css/Leaderboard.css";
 
 //This file shows the leaderboard
 const Leaderboard = () => {

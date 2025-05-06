@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import "./css/Characters.css"; 
 const Characters = () => {
   const [characters, setCharacters] = useState([]);
 

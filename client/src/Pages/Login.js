@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 //Login an account page
 const Login = () => {
     const [credentials, setCredentials] = useState({
         email: "",
         password: "",
     });
+    const navigate = useNavigate();
     //handles changes to login
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,6 +32,7 @@ const Login = () => {
                 localStorage.removeItem("token");
                 return;
             }
+            navigate("/profile/me"); //navigates user to their profile
         } catch (error) {
             console.error("Error logging in:", error);
             alert("Failed to log in. Please try again.");

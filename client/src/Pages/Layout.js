@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom"; // Keep Link here
-import "./Layout.css"; 
+import "./css/Layout.css"; 
 
 //layout of top part of the website
 const Layout = () => {

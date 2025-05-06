@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./mvp.css";
+import "./css/mvp.css";
 
 function Home() {
   const [user, setUser] = useState(null);
