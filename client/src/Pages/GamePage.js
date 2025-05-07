@@ -8,7 +8,7 @@ const initialGameState = {
   selectedAction: null,
   happinessScores: [0, 0, 0],
   gameStarted: false,
-  timeRemaining: 10, // reset timer value here (use 60 if desired)
+  timeRemaining: 60, // reset timer value here (use 60 if desired)
   currentRound: 1,
   gameOver: false,
 };
